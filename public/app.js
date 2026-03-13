@@ -8,7 +8,7 @@ const password = document.getElementById("password").value
 const offer = document.getElementById("offer").value
 const want = document.getElementById("want").value
 
-await fetch("/register",{
+await fetch("https://skillswap-api-6bf2.onrender.com",{
 
 method:"POST",
 
@@ -90,7 +90,7 @@ container.appendChild(div)
 
 async function sendRequest(id){
 
-await fetch("/swap-request",{
+await fetch("https://skillswap-api-6bf2.onrender.com",{
 
 method:"POST",
 
