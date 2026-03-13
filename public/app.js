@@ -1,3 +1,5 @@
+const API = "https://skillswap-api-6bf2.onrender.com"
+
 /* ---------------- REGISTER USER ---------------- */
 
 async function register(){
@@ -8,7 +10,7 @@ const password = document.getElementById("password").value
 const offer = document.getElementById("offer").value
 const want = document.getElementById("want").value
 
-await fetch("https://skillswap-api-6bf2.onrender.com",{
+await fetch(`${API}/register`,{
 
 method:"POST",
 
@@ -17,13 +19,11 @@ headers:{
 },
 
 body:JSON.stringify({
-
 name:name,
 email:email,
 password:password,
 skillsOffered:[offer],
 skillsWanted:[want]
-
 })
 
 })
@@ -33,11 +33,11 @@ alert("User Registered Successfully")
 }
 
 
-/* ---------------- LOAD USERS (DASHBOARD) ---------------- */
+/* ---------------- LOAD USERS ---------------- */
 
 async function loadUsers(){
 
-const res = await fetch("/users")
+const res = await fetch(`${API}/users`)
 
 const users = await res.json()
 
@@ -90,7 +90,7 @@ container.appendChild(div)
 
 async function sendRequest(id){
 
-await fetch("https://skillswap-api-6bf2.onrender.com",{
+await fetch(`${API}/swap-request`,{
 
 method:"POST",
 
@@ -99,10 +99,8 @@ headers:{
 },
 
 body:JSON.stringify({
-
 fromUser:"demoUser",
 toUser:id
-
 })
 
 })
@@ -112,13 +110,13 @@ alert("Swap Request Sent")
 }
 
 
-/* ---------------- SEARCH SKILL ---------------- */
+/* ---------------- SEARCH USERS BY SKILL ---------------- */
 
 async function searchSkill(){
 
 const skill = document.getElementById("skillInput").value
 
-const res = await fetch("/search?skill="+skill)
+const res = await fetch(`${API}/search?skill=${skill}`)
 
 const users = await res.json()
 
@@ -134,15 +132,9 @@ container.innerHTML += `
 
 <h3>${user.name}</h3>
 
-<p>
-Offers:
-${user.skillsOffered.join(", ")}
-</p>
+<p>Offers: ${user.skillsOffered.join(", ")}</p>
 
-<p>
-Wants:
-${user.skillsWanted.join(", ")}
-</p>
+<p>Wants: ${user.skillsWanted.join(", ")}</p>
 
 </div>
 
@@ -157,7 +149,7 @@ ${user.skillsWanted.join(", ")}
 
 async function loadRequests(){
 
-const res = await fetch("/swap-requests")
+const res = await fetch(`${API}/swap-requests`)
 
 const requests = await res.json()
 
