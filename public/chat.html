@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>SkillSwap Match</title>
+
+<link rel="stylesheet" href="styles.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@joeattardi/tinygesture@2.0.0/dist/tinygesture.min.js"></script>
+
+<style>
+
+#card{
+width:350px;
+margin:auto;
+background:#1f2937;
+padding:30px;
+border-radius:20px;
+text-align:center;
+transition:0.4s;
+}
+
+.swipe-area{
+margin-top:100px;
+}
+
+.avatar{
+width:80px;
+border-radius:50%;
+margin-bottom:10px;
+}
+
+.buttons{
+margin-top:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container swipe-area">
+
+<h2 style="text-align:center">Find Skill Matches</h2>
+
+<br>
+
+<div id="card"></div>
+
+<div class="buttons" style="text-align:center">
+
+<button class="btn btn-pink" onclick="skipUser()">Skip</button>
+
+<button class="btn btn-green" onclick="acceptUser()">Swap</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+let users=[]
+let index=0
+
+async function loadUsers(){
+
+const res=await fetch("/users")
+
+users=await res.json()
+
+showUser()
+
+}
+
+function showUser(){
+
+if(index>=users.length){
+
+document.getElementById("card").innerHTML="No more users"
+
+return
+
+}
+
+const user=users[index]
+
+document.getElementById("card").innerHTML=`
+
+<img class="avatar"
+src="https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}">
+
+<h3>${user.name}</h3>
+
+<p>
+
+Offers:
+${user.skillsOffered.map(s=>`<span class="skill">${s}</span>`).join("")}
+
+</p>
+
+<p>
+
+Wants:
+${user.skillsWanted.map(s=>`<span class="skill">${s}</span>`).join("")}
+
+</p>
+
+`
+
+}
+
+function skipUser(){
+
+index++
+
+showUser()
+
+}
+
+async function acceptUser(){
+
+const user=users[index]
+
+await fetch("/swap-request",{
+
+method:"POST",
+
+headers:{"Content-Type":"application/json"},
+
+body:JSON.stringify({
+
+fromUser:"demoUser",
+toUser:user._id
+
+})
+
+})
+
+alert("Swap request sent!")
+
+index++
+
+showUser()
+
+}
+
+loadUsers()
+
+</script>
+
+</body>
+</html>
